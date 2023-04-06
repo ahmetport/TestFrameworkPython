@@ -8,6 +8,5 @@ def setup(request):
     driver.maximize_window()
     driver.get("https://demowebshop.tricentis.com/")
     request.cls.driver=driver #soldaki driver bizim verdigimiz isim sagdaki ise yukardaki driver
-
     yield
     driver.quit()
