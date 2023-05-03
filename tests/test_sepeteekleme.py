@@ -5,17 +5,19 @@ import re
 from selenium.webdriver.common.by import By
 
 from pages.anasayfa import Anasayfa
-from pages.urun_detaysayfası import UrunDetaySayfa
+from pages.Urun_DetaySayfa import Urun_DetaySayfa
 
 
 @pytest.mark.usefixtures("setup")
 class TestSepeteEkleme:
+    #@pytest.fixture(autouse=true)
+    #def class_setup(self):
+     #   self.anasayfa=Anasayfa(self.driver) #object sadece burda oluşturduk her def fonksiyonunda kullanalım diye
 
     def test_urundetaylari(self):
         self.driver.get("https://demowebshop.tricentis.com/")
-
         anasayfa=Anasayfa(self.driver)
-        urun_detay_sayfasi=UrunDetaySayfa(self.driver)
+        urun_detay_sayfasi=Urun_DetaySayfa(self.driver)
 
         anasayfa.gift_card_olmayan_urune_tikla()
         oncesi=urun_detay_sayfasi.sepetteki_urun_sayisini_ver()
