@@ -12,7 +12,7 @@ from ddt import ddt, data, file_data, idata, unpack
 @pytest.mark.usefixtures("setup")
 @ddt
 class TestArama(unittest.TestCase):
-    @data(*excelYardımcı.excel_listeler_listesine_cevir("./testdata/arama.xls","Sheet1"))
+    @data(*excelYardımcı.excel_listeler_listesine_cevir("./testdata/arama.xls","Personel Muafiyet Listesi"))
     @unpack
 
     def test_ikiharfli_üçharfli_aramayap(self,kelime,beklenen_mesaj):
