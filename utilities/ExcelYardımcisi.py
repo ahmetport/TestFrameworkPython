@@ -1,7 +1,7 @@
 import openpyxl
 
 
-class excelYardımcı:
+class ExcelYardımcı:
 
     def excel_listeler_listesine_cevir(dosyayeri, sayfaadi):
         dosya = openpyxl.load_workbook(dosyayeri)

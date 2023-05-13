@@ -1,56 +1,39 @@
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
-from time import sleep
+import pytest
+import softest
+from pages.anasayfa import Anasayfa
+from pages.urun_detay_sayfasi import UrunDetaySayfasi
 
 
-class TestHomepage:
+@pytest.mark.usefixtures("setup")
+class TestHomepage(softest.TestCase):
 
+    @pytest.fixture(autouse=True)
+    def class_setup(self):
+        self.anasayfa = Anasayfa(self.driver)
 
-    def test_top_menu_items(self):
-        driver= webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        driver.maximize_window()
-        driver.get("https://demowebshop.tricentis.com/")
+    @pytest.mark.smoke
+    def test_ust_menu_linklerini_dogrula(self):
+        self.driver.get("https://demowebshop.tricentis.com/")
+        expected_menu = ["BOOKS", "COMPUTERS", "ELECTRONICS", "APPAREL & SHOES", "DIGITAL DOWNLOADS",
+                         "JEWELRY", "GIFT CARDS"]
 
-        expected_menu = ["BOOKS", "COMPUTERS", "ELECTRONICS", "APPAREL & SHOES", "DIGITAL DOWNLOADS", "JEWELRY",
-                         "GIFT CARDS"]
-        elements = driver.find_elements(By.CSS_SELECTOR, "ul.top-menu > li > a")#buyuktur işaretini kullanırsak sadece başlıkları alır
-        #başlık altındakileri almaz
-        actual_menu_items = []  # bi tane liste açıp gelen elemntleri buraya ekliyoruz
-
-        for i in elements:
-            actual_menu_items.append(i.text)
-            print(actual_menu_items)
-            sleep(3)
-
+        actual_menu_items = self.anasayfa.ust_menu_isimlerini_liste_ver()
         for i in range(len(expected_menu)):
             assert expected_menu[i] == actual_menu_items[i]
 
-
-        driver.quit()
-
-    def test_urunetikla_urunismiile_urunfiyatini_karsilastir(self):
-
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        driver.maximize_window()
-        driver.get("https://demowebshop.tricentis.com/")
-
-        ilkurun_linki = driver.find_element(By.CSS_SELECTOR, "div.product-item h2 a")
-        urun_ismi = ilkurun_linki.text
-        print(urun_ismi)
-        urunfiyati = driver.find_element(By.CSS_SELECTOR, "span.price.actual-price").text
-        print(urunfiyati)
-        ilkurun_linki.click()
-        urunismi_detaysayfasi = driver.find_element(By.CSS_SELECTOR, "div.product-name h1").text.strip()
-        print(urunismi_detaysayfasi)
-        urunfiyat_detaysayfasi = driver.find_element(By.CSS_SELECTOR, "div.product-price span").text.strip()
-        print(urunfiyat_detaysayfasi)
-
-        assert urun_ismi == urunismi_detaysayfasi
-        assert urunfiyati == urunfiyat_detaysayfasi
-
-        driver.quit()
+    @pytest.mark.smoke
+    def test_urun_ismine_tiklayinca_urun_detaylari_sayfasi_acilir(self):
+        self.driver.get("https://demowebshop.tricentis.com/")
+        urun_ismi = self.anasayfa.ilk_urun_ismini_ver()
+        urun_fiyati = self.anasayfa.ilk_urun_fiyatini_ver()
+        urun_detay_sayfasi = self.anasayfa.ilk_urun_ismine_tikla()
+        print("Anasayfa urun ismi: " + urun_ismi)
+        print("anasayfa urun fiyati: " + urun_fiyati)
+        urun_ismi_detay_sayfasi = urun_detay_sayfasi.urun_ismini_ver()
+        urun_fiyat_detay_sayfasi = urun_detay_sayfasi.urun_fiyatini_ver()
+        self.soft_assert(self.assertEqual, urun_ismi, urun_ismi_detay_sayfasi, "Urun ismi detay sayfasinda farkli")
+        self.soft_assert(self.assertEqual, urun_fiyati, urun_fiyat_detay_sayfasi, "Urun fiyati detay sayfasinda farkli")
+        self.assert_all()
 
 
 
