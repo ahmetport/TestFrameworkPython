@@ -11,9 +11,11 @@ class TestHomepage(softest.TestCase):
     def class_setup(self):
         self.anasayfa = Anasayfa(self.driver)
 
-    @pytest.mark.smoke
+    #@pytest.mark.smoke #terminale -m smoke dedigimde sadece bu testi çalıştırır
     def test_ust_menu_linklerini_dogrula(self):
-        self.driver.get("https://demowebshop.tricentis.com/")
+        print("url ="+self.baseurl) #hangi url çalışıp çalışmadıgını kontrol için yazdık buraya
+        #self.driver.get("https://demowebshop.tricentis.com/")
+        self.driver.get(self.baseurl)
         expected_menu = ["BOOKS", "COMPUTERS", "ELECTRONICS", "APPAREL & SHOES", "DIGITAL DOWNLOADS",
                          "JEWELRY", "GIFT CARDS"]
 
@@ -21,9 +23,10 @@ class TestHomepage(softest.TestCase):
         for i in range(len(expected_menu)):
             assert expected_menu[i] == actual_menu_items[i]
 
-    @pytest.mark.smoke
+    #@pytest.mark.smoke
     def test_urun_ismine_tiklayinca_urun_detaylari_sayfasi_acilir(self):
-        self.driver.get("https://demowebshop.tricentis.com/")
+        #self.driver.get("https://demowebshop.tricentis.com/")
+        self.driver.get(self.baseurl)
         urun_ismi = self.anasayfa.ilk_urun_ismini_ver()
         urun_fiyati = self.anasayfa.ilk_urun_fiyatini_ver()
         urun_detay_sayfasi = self.anasayfa.ilk_urun_ismine_tikla()
